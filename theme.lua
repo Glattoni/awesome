@@ -11,8 +11,8 @@ theme.font = 'Hack Nerd Font 12'
 
 theme.bg_normal = '#3b4252'
 theme.bg_focus = '#3b4252'
-theme.bg_urgent = '#ff0000'
-theme.bg_minimize = '#444444'
+theme.bg_urgent = '#2596be'
+theme.bg_minimize = '#eceff4'
 theme.bg_systray = theme.bg_normal
 
 theme.fg_normal = '#d8dee9'
@@ -20,8 +20,8 @@ theme.fg_focus = '#d08770'
 theme.fg_urgent = '#ffffff'
 theme.fg_minimize = '#ffffff'
 
-theme.useless_gap = dpi(8)
-theme.border_width = dpi(3)
+theme.useless_gap = dpi(6)
+theme.border_width = dpi(2)
 theme.border_normal = '#000000'
 theme.border_focus = '#8fbcbb'
 theme.border_marked = '#91231c'
@@ -40,7 +40,7 @@ theme.border_marked = '#91231c'
 --theme.taglist_bg_focus = "#ff0000"
 
 -- Generate taglist squares:
-local taglist_square_size = dpi(0)
+local taglist_square_size = dpi(4)
 theme.taglist_squares_sel = theme_assets.taglist_squares_sel(taglist_square_size, theme.fg_normal)
 theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(taglist_square_size, theme.fg_normal)
 

@@ -5,8 +5,7 @@ require('awful.autofocus')
 local wibox = require('wibox')
 local beautiful = require('beautiful')
 local naughty = require('naughty')
-
-local keys = require('user.mappings')
+local myRules = require('user.rules')
 
 if awesome.startup_errors then
   naughty.notify({
@@ -35,8 +34,6 @@ do
   end)
 end
 
-beautiful.init(gears.filesystem.get_configuration_dir() .. 'mytheme.lua')
-
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
   awful.layout.suit.tile,
@@ -60,7 +57,7 @@ awful.layout.layouts = {
 local mykeyboardlayout = awful.widget.keyboardlayout()
 
 -- {{{ Wibar
--- Create a textclock widget
+--
 local mytextclock = wibox.widget.textclock()
 
 -- Create a wibox for each screen and add it
@@ -87,49 +84,10 @@ local taglist_buttons = gears.table.join(
   end)
 )
 
-local tasklist_buttons = gears.table.join(
-  awful.button({}, 1, function(c)
-    if c == client.focus then
-      c.minimized = true
-    else
-      c:emit_signal('request::activate', 'tasklist', { raise = true })
-    end
-  end),
-  awful.button({}, 3, function()
-    awful.menu.client_list({ theme = { width = 250 } })
-  end),
-  awful.button({}, 4, function()
-    awful.client.focus.byidx(1)
-  end),
-  awful.button({}, 5, function()
-    awful.client.focus.byidx(-1)
-  end)
-)
-
-local function set_wallpaper(s)
-  -- Wallpaper
-  if beautiful.wallpaper then
-    local wallpaper = beautiful.wallpaper
-    -- If wallpaper is a function, call it with the screen
-    if type(wallpaper) == 'function' then
-      wallpaper = wallpaper(s)
-    end
-    gears.wallpaper.maximized(wallpaper, s, true)
-  end
-end
-
--- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
-screen.connect_signal('property::geometry', set_wallpaper)
-
 awful.screen.connect_for_each_screen(function(s)
-  -- Wallpaper
-  set_wallpaper(s)
-
   -- Each screen has its own tag table.
   awful.tag({ '1', '2', '3', '4', '5', '6', '7', '8', '9' }, s, awful.layout.layouts[1])
 
-  -- Create a promptbox for each screen
-  s.mypromptbox = awful.widget.prompt()
   -- Create an imagebox widget which will contain an icon indicating which layout we're using.
   -- We need one layoutbox per screen.
   s.mylayoutbox = awful.widget.layoutbox(s)
@@ -155,37 +113,6 @@ awful.screen.connect_for_each_screen(function(s)
     layout = {
       spacing = 12,
       layout = wibox.layout.fixed.horizontal,
-    },
-  })
-
-  -- Create a tasklist widget
-  s.mytasklist = awful.widget.tasklist({
-    screen = s,
-    filter = awful.widget.tasklist.filter.focused,
-    buttons = tasklist_buttons,
-    widget_template = {
-      {
-        {
-          {
-            {
-              id = 'icon_role',
-              widget = wibox.widget.imagebox,
-            },
-            margins = 6,
-            widget = wibox.container.margin,
-          },
-          {
-            id = 'text_role',
-            widget = wibox.widget.textbox,
-          },
-          layout = wibox.layout.fixed.horizontal,
-        },
-        left = 4,
-        right = 0,
-        widget = wibox.container.margin,
-      },
-      id = 'background_role',
-      widget = wibox.container.background,
     },
   })
 
@@ -217,9 +144,11 @@ awful.screen.connect_for_each_screen(function(s)
         widget = wibox.widget.textbox,
       }),
       s.mytaglist,
-      s.mypromptbox,
     },
-    s.mytasklist, -- Middle widget
+    wibox.widget({
+      widget = wibox.widget.separator,
+      visible = false,
+    }),
     { -- Right widgets
       layout = wibox.layout.fixed.horizontal,
       mykeyboardlayout,
@@ -231,66 +160,8 @@ awful.screen.connect_for_each_screen(function(s)
 end)
 -- }}}
 
--- {{{ Mouse bindings
-root.buttons(gears.table.join(awful.button({}, 4, awful.tag.viewnext), awful.button({}, 5, awful.tag.viewprev)))
--- }}}
-
--- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
-awful.rules.rules = {
-  -- All clients will match this rule.
-  {
-    rule = {},
-    properties = {
-      border_width = beautiful.border_width,
-      border_color = beautiful.border_normal,
-      focus = awful.client.focus.filter,
-      raise = true,
-      keys = keys.clientkeys,
-      buttons = keys.clientbuttons,
-      screen = awful.screen.preferred,
-      placement = awful.placement.no_overlap + awful.placement.no_offscreen,
-      callback = awful.client.setslave,
-    },
-  },
-  -- Floating clients.
-  {
-    rule_any = {
-      instance = {
-        'DTA', -- Firefox addon DownThemAll.
-        'copyq', -- Includes session name in class.
-        'pinentry',
-      },
-      class = {
-        'Arandr',
-        'Blueman-manager',
-        'Gpick',
-        'Kruler',
-        'MessageWin', -- kalarm.
-        'Sxiv',
-        'Tor Browser', -- Needs a fixed window size to avoid fingerprinting by screen size.
-        'Wpa_gui',
-        'veromix',
-        'xtightvncviewer',
-      },
-
-      name = {
-        'Event Tester',
-      },
-      role = {
-        'AlarmWindow', -- Thunderbird's calendar.
-        'ConfigManager', -- Thunderbird's about:config.
-        'pop-up', -- e.g. Google Chrome's (detached) Developer Tools.
-      },
-    },
-    properties = { floating = true },
-  },
-
-  -- Set Firefox to always map on the tag named "2" on screen 1.
-  -- { rule = { class = "Firefox" },
-  --   properties = { screen = 1, tag = "2" } },
-}
--- }}}
+awful.rules.rules = myRules
 
 -- {{{ Signals
 -- Signal function to execute when a new client appears.
