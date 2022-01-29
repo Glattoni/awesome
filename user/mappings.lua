@@ -137,6 +137,11 @@ M.globalkeys = gears.table.join(
             { description = 'rofi', group = 'Applications' }
             ),
   awful.key(
+            { modkey, 'Shift' }, 'p',
+            function() awful.spawn('rofi -show window') end,
+            { description = 'view windows in rofi', group = 'Applications' }
+            ),
+  awful.key(
             { modkey }, 'b',
             function() awful.spawn('firefox') end,
             { description = 'firefox', group = 'Applications' }
@@ -155,8 +160,8 @@ M.clientkeys = gears.table.join(
             { description = 'close', group = 'client' }
             ),
   awful.key(
-            { modkey, 'Control' },
-            'space',
+            { modkey },
+            'g',
             awful.client.floating.toggle,
             { description = 'toggle floating', group = 'client' }
             ),

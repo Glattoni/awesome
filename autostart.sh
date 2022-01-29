@@ -1,5 +1,5 @@
 #!/bin/sh
 
 lxsession &
-picom &
+picom --experimental-backends &
 nitrogen --restore &

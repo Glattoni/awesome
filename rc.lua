@@ -56,8 +56,6 @@ awful.layout.layouts = {
 
 local mykeyboardlayout = awful.widget.keyboardlayout()
 
--- {{{ Wibar
---
 local mytextclock = wibox.widget.textclock()
 
 -- Create a wibox for each screen and add it
@@ -158,12 +156,10 @@ awful.screen.connect_for_each_screen(function(s)
     },
   })
 end)
--- }}}
 
 -- Rules to apply to new clients (through the "manage" signal).
 awful.rules.rules = myRules
 
--- {{{ Signals
 -- Signal function to execute when a new client appears.
 client.connect_signal('manage', function(c)
   -- Set the windows at the slave,
@@ -182,7 +178,6 @@ end)
 client.connect_signal('unfocus', function(c)
   c.border_color = beautiful.border_normal
 end)
--- }}}
 
 -- Autostart
 awful.spawn.with_shell(os.getenv('HOME') .. '/.config/awesome/autostart.sh')
