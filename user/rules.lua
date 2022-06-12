@@ -48,6 +48,7 @@ return {
       name = {
         'Event Tester',
         'Friends List',
+        'About Mozilla Firefox',
       },
       role = {
         'AlarmWindow', -- Thunderbird's calendar.
